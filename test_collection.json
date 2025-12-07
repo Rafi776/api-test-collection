@@ -136,55 +136,8 @@
                             "type": "text/javascript"
                         }
                     }]
-                },
-                {
-                    "name": "7. Update Post (PUT) - Chained",
-                    "request": {
-                        "method": "PUT",
-                        "header": [{ "key": "Content-Type", "value": "application/json" }],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"id\": \"{{postID}}\",\n    \"title\": \"Chained Update\",\n    \"body\": \"Full update on ID: {{postID}}\",\n    \"userId\": 1\n}"
-                        },
-                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}"
-                    },
-                    "response": [],
-                    "event": [{
-                        "listen": "test",
-                        "script": {
-                            "exec": [
-                                "pm.test(\"Status code is 200 OK\", function () {",
-                                "    pm.response.to.have.status(200);",
-                                "});"
-                            ],
-                            "type": "text/javascript"
-                        }
-                    }]
-                },
-                {
-                    "name": "8. Patch Post (Partial Update) - Chained",
-                    "request": {
-                        "method": "PATCH",
-                        "header": [{ "key": "Content-Type", "value": "application/json" }],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"title\": \"Partial Patch by Newman\"\n}"
-                        },
-                        "url": "https://jsonplaceholder.typicode.com/posts/1"
-                    },
-                    "response": [],
-                    "event": [{
-                        "listen": "test",
-                        "script": {
-                            "exec": [
-                                "pm.test(\"Status code is 200 OK\", function () {",
-                                "    pm.response.to.have.status(200);",
-                                "});"
-                            ],
-                            "type": "text/javascript"
-                        }
-                    }]
                 }
+
             ],
             "event": [{
                 "listen": "prerequest",
