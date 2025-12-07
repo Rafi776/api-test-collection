@@ -31,7 +31,7 @@
                     "name": "2. Get Single Post",
                     "request": {
                         "method": "GET",
-                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}"
+                        "url": "https://jsonplaceholder.typicode.com/posts/1"
                     },
                     "response": [],
                     "event": [{
@@ -170,7 +170,7 @@
                             "mode": "raw",
                             "raw": "{\n    \"title\": \"Partial Patch by Newman\"\n}"
                         },
-                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}"
+                        "url": "https://jsonplaceholder.typicode.com/posts/1"
                     },
                     "response": [],
                     "event": [{
