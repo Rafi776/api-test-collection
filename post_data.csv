@@ -1,4 +1,4 @@
-Scenario,newTitle,newBody,newUserId
-Valid post,Postman DDT Test 1,This is the first data driven body.,5
-Long title test,This is a very long title used to test boundary conditions.,Short body.,10
-User ID 0 test,Zero ID Title,Testing edge case user.,0
+newTitle,newBody,newUserId,commenterName,commenterEmail,commentBody,commentPostId,userName,userEmail,userPhone
+Newman Post 1,Body for test 1,5,Alpha Tester,"alpha@test.com","Great API!",1,Alpha User,"alpha.user@test.com","1-555-555-1001"
+Newman Post 2,Body for test 2,10,Beta Tester,"beta@test.com","Needs perf improvements.",2,Beta User,"beta.user@test.com","1-555-555-1002"
+Newman Post 3,Body for test 3,1,Charlie Tester,"charlie@test.com","Awesome work.",3,Charlie User,"charlie.user@test.com","1-555-555-1003"

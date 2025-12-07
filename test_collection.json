@@ -1,54 +1,454 @@
 {
-  "info": {
-    "_postman_id": "111aaa22-bbbc-44cc-dd55-ee6677889900",
-    "name": "JSONPlaceholder Public API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Get Posts",
-      "request": {
-        "method": "GET",
-        "url": "https://jsonplaceholder.typicode.com/posts"
-      }
+    "info": {
+        "_postman_id": "111aaa22-bbbc-44cc-dd55-ee6677889900",
+        "name": "Large JSONPlaceholder Test Collection",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
-    {
-      "name": "Get Single Post",
-      "request": {
-        "method": "GET",
-        "url": "https://jsonplaceholder.typicode.com/posts/1"
-      }
-    },
-    {
-      "name": "Create Post",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{ \"title\": \"foo\", \"body\": \"bar\", \"userId\": 1 }"
+    "item": [
+        {
+            "name": "Posts Resource",
+            "item": [
+                {
+                    "name": "1. Get All Posts (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/posts"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "2. Get Single Post",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "3. Get Posts by User ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/posts?userId=1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "4. Get Posts by ID Range",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/posts?id_gte=80&id_lte=90"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "5. Get Single Post Comments",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}/comments"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "6. Create New Post (DDT & Chaining)",
+                    "request": {
+                        "method": "POST",
+                        "header": [{ "key": "Content-Type", "value": "application/json" }],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"{{newTitle}}\",\n    \"body\": \"{{newBody}}\",\n    \"userId\": {{newUserId}}\n}"
+                        },
+                        "url": "https://jsonplaceholder.typicode.com/posts"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "// 1. Assertions (DDT)",
+                                "pm.test(\"Status code is 201 Created\", function () {",
+                                "    pm.response.to.have.status(201);",
+                                "});",
+                                "var sentTitle = pm.iterationData.get(\"newTitle\");",
+                                "pm.test(\"Response title matches sent data\", function () {",
+                                "    pm.expect(pm.response.json().title).to.eql(sentTitle);",
+                                "});",
+                                "// 2. Chaining",
+                                "var postId = pm.response.json().id;",
+                                "// Setting the postId as a Collection variable for subsequent requests to use",
+                                "pm.collectionVariables.set(\"postID\", postId);",
+                                "console.log('New Post ID created for chaining: ' + postId);"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "7. Update Post (PUT) - Chained",
+                    "request": {
+                        "method": "PUT",
+                        "header": [{ "key": "Content-Type", "value": "application/json" }],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": \"{{postID}}\",\n    \"title\": \"Chained Update\",\n    \"body\": \"Full update on ID: {{postID}}\",\n    \"userId\": 1\n}"
+                        },
+                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "8. Patch Post (Partial Update) - Chained",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [{ "key": "Content-Type", "value": "application/json" }],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Partial Patch by Newman\"\n}"
+                        },
+                        "url": "https://jsonplaceholder.typicode.com/posts/{{postID}}"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200 OK\", function () {",
+                                "    pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                }
+            ],
+            "event": [{
+                "listen": "prerequest",
+                "script": {
+                    "exec": [
+                        "// Initialize postID if not set, needed for the first two requests to pass",
+                        "if (!pm.collectionVariables.get(\"postID\")) {",
+                        "    pm.collectionVariables.set(\"postID\", 1);",
+                        "}"
+                    ],
+                    "type": "text/javascript"
+                }
+            }]
         },
-        "url": "https://jsonplaceholder.typicode.com/posts"
-      }
-    },
-    {
-      "name": "Update Post",
-      "request": {
-        "method": "PUT",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{ \"id\": 1, \"title\": \"updated\", \"body\": \"content\", \"userId\": 1 }"
+        {
+            "name": "Comments Resource",
+            "item": [
+                {
+                    "name": "9. Get All Comments (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/comments"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "10. Get Single Comment",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/comments/1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "11. Get Comments by Post ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/comments?postId=1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "12. Create New Comment (DDT)",
+                    "request": {
+                        "method": "POST",
+                        "header": [{ "key": "Content-Type", "value": "application/json" }],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"postId\": {{commentPostId}},\n    \"name\": \"{{commenterName}}\",\n    \"email\": \"{{commenterEmail}}\",\n    \"body\": \"{{commentBody}}\"\n}"
+                        },
+                        "url": "https://jsonplaceholder.typicode.com/comments"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 201 Created\", function () {",
+                                "    pm.response.to.have.status(201);",
+                                "});",
+                                "var sentName = pm.iterationData.get(\"commenterName\");",
+                                "pm.test(\"Commenter name is correct\", function () {",
+                                "    pm.expect(pm.response.json().name).to.eql(sentName);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "13. Update Comment (PUT)",
+                    "request": {
+                        "method": "PUT",
+                        "header": [{ "key": "Content-Type", "value": "application/json" }],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 1,\n    \"postId\": 1,\n    \"body\": \"Updated Comment Body\"\n}"
+                        },
+                        "url": "https://jsonplaceholder.typicode.com/comments/1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "14. Delete Comment",
+                    "request": {
+                        "method": "DELETE",
+                        "url": "https://jsonplaceholder.typicode.com/comments/1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                }
+            ]
         },
-        "url": "https://jsonplaceholder.typicode.com/posts/1"
-      }
-    },
-    {
-      "name": "Delete Post",
-      "request": {
-        "method": "DELETE",
-        "url": "https://jsonplaceholder.typicode.com/posts/1"
-      }
-    }
-  ]
+        {
+            "name": "Users and Utilities",
+            "item": [
+                {
+                    "name": "15. Get All Users (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/users"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "16. Get Single User",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/users/1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "17. Get User by Username",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/users?username=Bret"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "18. Get User by Company Name",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/users?company.name=Romaguera-Crona"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "19. Create New User (DDT)",
+                    "request": {
+                        "method": "POST",
+                        "header": [{ "key": "Content-Type", "value": "application/json" }],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"{{userName}}\",\n    \"email\": \"{{userEmail}}\",\n    \"phone\": \"{{userPhone}}\"\n}"
+                        },
+                        "url": "https://jsonplaceholder.typicode.com/users"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 201 Created\", function () {",
+                                "    pm.response.to.have.status(201);",
+                                "});",
+                                "var sentName = pm.iterationData.get(\"userName\");",
+                                "pm.test(\"User name is correct\", function () {",
+                                "    pm.expect(pm.response.json().name).to.eql(sentName);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "20. Get All Albums",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/albums"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "21. Non-Existent Post (Negative Test)",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/posts/99999999"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 404 Not Found\", function () {pm.response.to.have.status(404);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                },
+                {
+                    "name": "22. Get Single Todo",
+                    "request": {
+                        "method": "GET",
+                        "url": "https://jsonplaceholder.typicode.com/todos/1"
+                    },
+                    "response": [],
+                    "event": [{
+                        "listen": "test",
+                        "script": {
+                            "exec": ["pm.test(\"Status code is 200 OK\", function () {pm.response.to.have.status(200);});"],
+                            "type": "text/javascript"
+                        }
+                    }]
+                }
+            ]
+        }
+    ]
 }
