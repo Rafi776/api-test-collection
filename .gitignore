@@ -1,0 +1,7 @@
+# Ignore Node Modules from npm installs
+node_modules/
+
+# Ignore Postman environment files if they contain production keys
+# If your environment file contains sensitive keys, DO NOT commit it!
+# Otherwise, commit it, but manage keys via Jenkins Secrets.
+my-environment.json

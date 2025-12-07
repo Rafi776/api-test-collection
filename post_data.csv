@@ -1,0 +1,4 @@
+Scenario,newTitle,newBody,newUserId
+Valid post,Postman DDT Test 1,This is the first data driven body.,5
+Long title test,This is a very long title used to test boundary conditions.,Short body.,10
+User ID 0 test,Zero ID Title,Testing edge case user.,0
